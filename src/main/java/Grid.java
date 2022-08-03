@@ -5,7 +5,7 @@ public class Grid {
     public static final int GRID_SIZE = 9;
     public List<List<Point>> gridArray;
 
-    public static int gridNumber = 1;
+    public static long gridNumber = 1;
 
     public static Grid getInitiliazedGrid() {
         var grid = new Grid();
