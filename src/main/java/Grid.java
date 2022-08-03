@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Grid {
-    public static final int GRID_SIZE = 8;
+    public static final int GRID_SIZE = 9;
     public List<List<Point>> gridArray;
 
     public static int gridNumber = 1;
@@ -67,9 +67,11 @@ public class Grid {
 
         grid.gridArray.get(4).get(6).setDependsOn(grid.gridArray.get(3).get(6));
         grid.gridArray.get(4).get(7).setDependsOn(grid.gridArray.get(4).get(6));
+        grid.gridArray.get(4).get(8).setDependsOn(grid.gridArray.get(4).get(7));
 
         grid.gridArray.get(5).get(5).setDependsOn(grid.gridArray.get(5).get(6));
         grid.gridArray.get(5).get(6).setDependsOn(grid.gridArray.get(5).get(7));
+        grid.gridArray.get(5).get(7).setDependsOn(grid.gridArray.get(5).get(8));
 
         grid.gridArray.get(6).get(6).setDependsOn(grid.gridArray.get(6).get(7));
 
@@ -80,12 +82,24 @@ public class Grid {
         grid.gridArray.get(6).get(3).setDependsOn(grid.gridArray.get(6).get(2));
         grid.gridArray.get(6).get(2).setDependsOn(grid.gridArray.get(6).get(1));
 
+        grid.gridArray.get(8).get(2).setDependsOn(grid.gridArray.get(7).get(2));
         grid.gridArray.get(7).get(2).setDependsOn(grid.gridArray.get(7).get(3));
         grid.gridArray.get(7).get(3).setDependsOn(grid.gridArray.get(7).get(4));
 
-
         grid.gridArray.get(2).get(7).setDependsOn(grid.gridArray.get(2).get(6));
         grid.gridArray.get(3).get(7).setDependsOn(grid.gridArray.get(2).get(7));
+
+        grid.gridArray.get(8).get(1).setDependsOn(grid.gridArray.get(7).get(1));
+
+        grid.gridArray.get(8).get(3).setDependsOn(grid.gridArray.get(8).get(4));
+
+        grid.gridArray.get(8).get(5).setDependsOn(grid.gridArray.get(8).get(6));
+        grid.gridArray.get(8).get(6).setDependsOn(grid.gridArray.get(8).get(7));
+        grid.gridArray.get(8).get(7).setDependsOn(grid.gridArray.get(7).get(7));
+        grid.gridArray.get(7).get(7).setDependsOn(grid.gridArray.get(7).get(8));
+
+        grid.gridArray.get(0).get(8).setDependsOn(grid.gridArray.get(1).get(8));
+        grid.gridArray.get(1).get(8).setDependsOn(grid.gridArray.get(2).get(8));
 
 
     }
