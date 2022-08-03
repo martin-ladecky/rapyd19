@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Grid {
-    public static final int GRID_SIZE = 2;
+    public static final int GRID_SIZE = 3;
     public List<List<Point>> gridArray;
 
     public static Grid getInitiliazedGrid() {
@@ -32,49 +32,45 @@ public class Grid {
             }
             result.append("\n");
         }
-
+        result.append("=====\n");
         return result.toString();
     }
 
-    public boolean isEnd(int i, int j) {
-        if (i == GRID_SIZE - 1 && j == GRID_SIZE - 1) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isEnd(Position position) {
+        return position.x >= GRID_SIZE - 1 && position.y >= GRID_SIZE - 1;
     }
 
-    public void traverseAllCombinations(int positionX, int positionY) {
-        if (isEnd(positionX, positionY)) {
+    public void traverseAllCombinations(Position position) {
+        if (isEnd(position)) {
+            gridArray.get(position.x).get(position.y).setValue(true);
+            System.out.println(printGrid());
+            gridArray.get(position.x).get(position.y).setValue(false);
             System.out.println(printGrid());
             return;
         }
-        gridArray.get(positionX).get(positionY).setValue(true);
-        int positionX1 = next(positionX, positionY);
-        int positionY1 = next(positionX, positionY);
-        traverseAllCombinations(positionX1, positionY1);
-        if (isEnd(positionX, positionY)) {
-            System.out.println(printGrid());
-            return;
-        }
+        gridArray.get(position.x).get(position.y).setValue(true);
+        traverseAllCombinations(position.next());
 
-        gridArray.get(positionX).get(positionY).setValue(false);
-        positionX1 = next(positionX);
-        positionY1 = next(positionY);
-
-        traverseAllCombinations(positionX1, positionY1);
-        if (isEnd(positionX, positionY)) {
-            System.out.println(printGrid());
-            return;
-        }
+        gridArray.get(position.x).get(position.y).setValue(false);
+        traverseAllCombinations(position.next());
     }
 
-    public class Position {
-        public int x;
-        public int y;
+    public static class Position {
+        private final int x;
+        private final int y;
 
-        public void next() {
+        public Position(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
 
+        public Position next() {
+            final int x1 = (this.x + 1) % GRID_SIZE;
+            int y1 = this.y;
+            if (x1 == 0) {
+                y1 = (this.y + 1) % GRID_SIZE;
+            }
+            return new Position(x1, y1);
         }
     }
 }
