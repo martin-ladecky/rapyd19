@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Grid {
-    public static final int GRID_SIZE = 3;
+    public static final int GRID_SIZE = 6;
     public List<List<Point>> gridArray;
 
     public static int gridNumber = 1;
@@ -24,6 +24,42 @@ public class Grid {
 
     private static void setupDependees(Grid grid) {
         grid.gridArray.get(0).get(0).setDependsOn(grid.gridArray.get(1).get(0));
+        grid.gridArray.get(1).get(0).setDependsOn(grid.gridArray.get(2).get(0));
+        grid.gridArray.get(2).get(0).setDependsOn(grid.gridArray.get(3).get(0));
+
+        grid.gridArray.get(0).get(1).setDependsOn(grid.gridArray.get(0).get(2));
+        grid.gridArray.get(0).get(2).setDependsOn(grid.gridArray.get(0).get(3));
+        grid.gridArray.get(0).get(3).setDependsOn(grid.gridArray.get(0).get(4));
+        grid.gridArray.get(0).get(4).setDependsOn(grid.gridArray.get(0).get(5));
+        grid.gridArray.get(0).get(5).setDependsOn(grid.gridArray.get(1).get(5));
+        grid.gridArray.get(1).get(5).setDependsOn(grid.gridArray.get(2).get(5));
+
+        grid.gridArray.get(2).get(4).setDependsOn(grid.gridArray.get(1).get(4));
+        grid.gridArray.get(1).get(4).setDependsOn(grid.gridArray.get(1).get(3));
+        grid.gridArray.get(1).get(3).setDependsOn(grid.gridArray.get(1).get(2));
+        grid.gridArray.get(1).get(2).setDependsOn(grid.gridArray.get(1).get(1));
+
+        grid.gridArray.get(2).get(3).setDependsOn(grid.gridArray.get(2).get(2));
+        grid.gridArray.get(2).get(2).setDependsOn(grid.gridArray.get(2).get(1));
+
+        grid.gridArray.get(3).get(2).setDependsOn(grid.gridArray.get(3).get(1));
+        grid.gridArray.get(3).get(1).setDependsOn(grid.gridArray.get(4).get(1));
+        grid.gridArray.get(4).get(1).setDependsOn(grid.gridArray.get(5).get(1));
+
+        grid.gridArray.get(3).get(3).setDependsOn(grid.gridArray.get(3).get(4));
+        grid.gridArray.get(3).get(4).setDependsOn(grid.gridArray.get(3).get(5));
+
+
+        grid.gridArray.get(4).get(2).setDependsOn(grid.gridArray.get(4).get(3));
+        grid.gridArray.get(4).get(3).setDependsOn(grid.gridArray.get(4).get(4));
+        grid.gridArray.get(4).get(4).setDependsOn(grid.gridArray.get(4).get(5));
+
+        grid.gridArray.get(5).get(0).setDependsOn(grid.gridArray.get(4).get(0));
+
+        grid.gridArray.get(5).get(2).setDependsOn(grid.gridArray.get(5).get(3));
+        grid.gridArray.get(5).get(3).setDependsOn(grid.gridArray.get(5).get(4));
+
+
     }
 
     public String printGrid() {
@@ -43,20 +79,64 @@ public class Grid {
     }
 
     public void traverseAllCombinations(Position position) {
+        final Point point = gridArray.get(position.x).get(position.y);
         if (isEnd(position)) {
-            gridArray.get(position.x).get(position.y).setValue(true);
-            System.out.println(printGrid());
+            point.setValue(true);
+//            System.out.println(printGrid());
             gridNumber++;
-            gridArray.get(position.x).get(position.y).setValue(false);
-            System.out.println(printGrid());
+            if (gridNumber % 100_000_000 == 0) {
+                System.out.println(printGrid());
+            }
+            point.setValue(false);
+//            System.out.println(printGrid());
             gridNumber++;
+
+            if (gridNumber % 100_000_000 == 0) {
+                System.out.println(printGrid());
+            }
             return;
         }
-        gridArray.get(position.x).get(position.y).setValue(true);
-        traverseAllCombinations(position.next());
+        point.setValue(true);
+        if (allDependesOnTrue(point)) {
+            traverseAllCombinations(position.next());
+        }
 
-        gridArray.get(position.x).get(position.y).setValue(false);
-        traverseAllCombinations(position.next());
+        point.setValue(false);
+        if (allDependeesFalse(point)) {
+            traverseAllCombinations(position.next());
+        }
+    }
+
+    private boolean allDependeesFalse(Point point) {
+        if (point == null) {
+            return true;
+        }
+        if (point.getValue() == null) {
+            point.setValue(false);
+        }
+        boolean result;
+        if (!point.getValue()) {
+            result = allDependeesFalse(point.getDependee());
+        } else {
+            result = false;
+        }
+        return result;
+    }
+
+    private boolean allDependesOnTrue(Point point) {
+        if (point == null) {
+            return true;
+        }
+        if (point.getValue() == null) {
+            point.setValue(true);
+        }
+        boolean result;
+        if (point.getValue()) {
+            result = allDependesOnTrue(point.getDependsOn());
+        } else {
+            result = false;
+        }
+        return result;
     }
 
     public static class Position {
