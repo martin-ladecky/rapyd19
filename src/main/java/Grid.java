@@ -5,6 +5,8 @@ public class Grid {
     public static final int GRID_SIZE = 3;
     public List<List<Point>> gridArray;
 
+    public static int gridNumber = 1;
+
     public static Grid getInitiliazedGrid() {
         var grid = new Grid();
         grid.gridArray = new ArrayList<>(GRID_SIZE);
@@ -32,7 +34,7 @@ public class Grid {
             }
             result.append("\n");
         }
-        result.append("=====\n");
+        result.append("=== ").append(gridNumber).append(" ==\n");
         return result.toString();
     }
 
@@ -44,8 +46,10 @@ public class Grid {
         if (isEnd(position)) {
             gridArray.get(position.x).get(position.y).setValue(true);
             System.out.println(printGrid());
+            gridNumber++;
             gridArray.get(position.x).get(position.y).setValue(false);
             System.out.println(printGrid());
+            gridNumber++;
             return;
         }
         gridArray.get(position.x).get(position.y).setValue(true);
